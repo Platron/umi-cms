@@ -41,7 +41,6 @@ class platronPayment extends payment {
 			'pg_lifetime'		=> $nLifeTime,
 			'pg_testing_mode'	=> $bDemoMode,
 			'pg_description'	=> $strDescription,
-			'pg_user_ip'		=> $_SERVER['REMOTE_ADDR'],
 			'pg_language'		=> $strLanguage,
 			'pg_check_url'		=> $strCheckUrl,
 			'pg_result_url'		=> $strResultUrl,
