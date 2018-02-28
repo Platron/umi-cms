@@ -12,7 +12,6 @@ $FORMS['form_block'] = <<<END
 	   <input type="hidden" name="pg_lifetime" value="%pg_lifetime%" />
 	   <input type="hidden" name="pg_testing_mode" value="%pg_testing_mode%" />
 	   <input type="hidden" name="pg_description" value="%pg_description%" />
-	   <input type="hidden" name="pg_user_ip" value="%pg_user_ip%" />		
 	
 	   <input type="hidden" name="pg_language" value="%pg_language%" />	
 	   <input type="hidden" name="pg_check_url" value="%pg_check_url%" />	
