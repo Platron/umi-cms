@@ -152,7 +152,7 @@ class platronPayment extends payment {
 			if (strpos ($taxList[$taxId], '10/100') !== false) return '110';
 			if (strpos ($taxList[$taxId], '18%') !== false) return '18';
 			if (strpos ($taxList[$taxId], '10%') !== false) return '10';
-            if (strpos ($taxList[$taxId], '0%') !== false) return '0';
+            		if (strpos ($taxList[$taxId], '0%') !== false) return '0';
 		}
 
 		return 'none';
