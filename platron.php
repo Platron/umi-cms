@@ -51,9 +51,10 @@ class platronPayment extends payment {
 			'cms_payment_module'=> 'UMICMS',
 		);
 
-		if(!empty($this->object->payment_system) && !$bDemoMode)
+		if(!empty($this->object->payment_system) && !$bDemoMode){
 			$arrFields['pg_payment_system'] = $this->object->payment_system;
-
+        }
+        
 		$user_id = $this->order->getValue('customer_id');
 		$userObject = umiObjectsCollection::getInstance()->getObject( $user_id );
 		
@@ -107,7 +108,7 @@ class platronPayment extends payment {
 	       				$ofdReceiptItem->amount = round($shipping, 2);
     	   				$ofdReceiptItem->price = round($shipping, 2);
 	       				$ofdReceiptItem->quantity = 1;
-	       				$ofdReceiptItem->vat = '18'; // fixed
+	       				$ofdReceiptItem->vat = $VATstr == 'none'? 'none': '18';
 	       				$ofdReceiptItems[] = $ofdReceiptItem;
 					}
 				} 
@@ -144,15 +145,17 @@ class platronPayment extends payment {
 				->getTypeIdByGUID('tax-rate-guide');
 		$taxList = umiObjectsCollection::getInstance()
 				->getGuidedItems($taxGuideId);
-
+        
+        
 		if ($taxList[$taxId]) {
 			if (strpos ($taxList[$taxId], '18/118') !== false) return '118';
 			if (strpos ($taxList[$taxId], '10/100') !== false) return '110';
-			if (strpos ($taxList[$taxId], '18') !== false) return '18';
-			if (strpos ($taxList[$taxId], '10') !== false) return '10';
+			if (strpos ($taxList[$taxId], '18%') !== false) return '18';
+			if (strpos ($taxList[$taxId], '10%') !== false) return '10';
+            if (strpos ($taxList[$taxId], '0%') !== false) return '0';
 		}
 
-		return '0';
+		return 'none';
 
 		/*
 			[40] => Без НДС 
@@ -248,6 +251,16 @@ class platronPayment extends payment {
 		
 		$buffer->push($objResponse->asXML());
 		$buffer->end();
+	}
+    
+        
+    /**
+	 *
+	 * @param string $url
+	 * @return string URL with prefix-protocol if not exist
+	 */
+	private function _http($url) {
+		return strpos( $url, 'http://' ) === 0 || strpos( $url, 'https://' ) === 0 ? $url : 'http://' . $url;
 	}
 };
 	
@@ -499,7 +512,6 @@ class OfdReceiptRequest
 
 	public function makeXml()
 	{
-		//var_dump($this->params);
 		$xmlElement = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><request></request>');
 
 		foreach ($this->params as $paramName => $paramValue) {
