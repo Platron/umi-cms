@@ -108,7 +108,8 @@ class platronPayment extends payment {
 	       				$ofdReceiptItem->amount = round($shipping, 2);
     	   				$ofdReceiptItem->price = round($shipping, 2);
 	       				$ofdReceiptItem->quantity = 1;
-	       				$ofdReceiptItem->vat = $VATstr == 'none'? 'none': '18';
+	       				$ofdReceiptItem->vat = $VATstr == 'none'? 'none': '20';
+					$ofdReceiptItem->type = 'service';
 	       				$ofdReceiptItems[] = $ofdReceiptItem;
 					}
 				} 
@@ -148,9 +149,11 @@ class platronPayment extends payment {
         
         
 		if ($taxList[$taxId]) {
-			if (strpos ($taxList[$taxId], '18/118') !== false) return '118';
+			if (strpos ($taxList[$taxId], '20/120') !== false) return '120';
+			if (strpos ($taxList[$taxId], '18/118') !== false) return '120';
 			if (strpos ($taxList[$taxId], '10/100') !== false) return '110';
-			if (strpos ($taxList[$taxId], '18%') !== false) return '18';
+			if (strpos ($taxList[$taxId], '20%') !== false) return '20';
+			if (strpos ($taxList[$taxId], '18%') !== false) return '20';
 			if (strpos ($taxList[$taxId], '10%') !== false) return '10';
             		if (strpos ($taxList[$taxId], '0%') !== false) return '0';
 		}
@@ -160,10 +163,12 @@ class platronPayment extends payment {
 		/*
 			[40] => Без НДС 
 			[44] => НДС по расчетной ставке 10/110 
-			[45] => НДС по расчетной ставке 18/118 
+			[45] => НДС по расчетной ставке 20/120 
 			[41] => НДС по ставке 0% 
 			[42] => НДС по ставке 10% 
-			[43] => НДС по ставке 18% )
+			[43] => НДС по ставке 20% )
+			
+			Могут быть старые значения 18/118 и 18%
 		*/
 	}
 
@@ -540,6 +545,7 @@ class OfdReceiptItem
 	public $price;
 	public $quantity;
 	public $vat;
+	public $type = 'product';
 
 	public function toArray()
 	{
@@ -549,6 +555,7 @@ class OfdReceiptItem
 			'pg_price' => $this->price,
 			'pg_quantity' => $this->quantity,
 			'pg_vat' => $this->vat,
+			'pg_type' => $this->product,
 		);
 	}
 }
